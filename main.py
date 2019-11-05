@@ -1,4 +1,5 @@
 import network
+import esp
 
 class WiFi:
     def __init__(self, ssid, password):
@@ -28,6 +29,7 @@ class NTP:
 
 if __name__ == "__main__":
     main = WiFi('circuitspecialists.com', 'C!rCu!t!')
+    print(esp.check_fw())
     try:
         from machine import RTC
         NTP()
