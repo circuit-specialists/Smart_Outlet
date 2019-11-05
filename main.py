@@ -77,3 +77,23 @@ if __name__ == "__main__":
         controller = smart_control.CONTROLLER()
     except Exception as e:
         print(e)
+
+    try:
+        from microWebSrv import MicroWebSrv
+        mws = MicroWebSrv()  # TCP port 80 and files in /flash/www
+    except Exception as e:
+        print(e)
+
+    mws.Start(threaded=True) # Starts server in a new thread
+
+    @MicroWebSrv.route('/')
+    def handlerFuncGet(httpClient, httpResponse) :
+    print("In GET-TEST HTTP")
+
+    @MicroWebSrv.route('/relay', 'POST')
+    def handlerFuncGet(httpClient, httpResponse) :
+    print("In GET-TEST HTTP")
+
+    @MicroWebSrv.route('/post-test', 'POST')
+    def handlerFuncPost(httpClient, httpResponse) :
+    print("In POST-TEST HTTP")
