@@ -18,21 +18,21 @@ class WEBSRV:
 
         self.s = socket.socket()
         self.s.bind(addr)
-        self.s.listen(1)
-
+        self.s.listen(5)
+        self.s.settimeout(None)
         print('listening on', addr)
 
     def socketListener(self):
         cl, addr = self.s.accept()
         print('client connected from', addr)
         cl_file = cl.makefile('rwb', 0)
+        client_post = ""
         while True:
             line = cl_file.readline()
+            client_post += str(line)
             if not line or line == b'\r\n':
                 break
         response = self.html
-        while len(response) > 0:
-            cl.send(response[:536])
-            response = response[536:]
-            time.sleep(.2)
+        cl.sendall(response)
         cl.close()
+        return client_post

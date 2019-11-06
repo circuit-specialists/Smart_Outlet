@@ -85,6 +85,7 @@ if __name__ == "__main__":
 
     while True:
         try:
-            httpd.socketListener()
+            client_response = httpd.socketListener()
+            print(client_response)
         except Exception as e:
             print(e)
