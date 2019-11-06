@@ -65,9 +65,8 @@ class NANOWEBSRV:
         temp = f.read()
         f.close()
         try:
-            temp = temp.replace('\r\n', '\", \"').replace(': ', '\": \"')[temp.find("Host") + 1:-7]
-            self.client_dict = "{" + temp + "}"
-            self.client_dict = json.loads(self.client_dict)
-            print(self.client_dict["Referer"])
+            temp = temp.replace('\r\n\r\n', '').replace('\r\n', '\", \"').replace(': ', '\": \"')
+            self.client_dict = json.loads("{ \"Method\": \"" + temp + "\" }")
+            print(self.client_dict)
         except Exception as e:
             print(e)
