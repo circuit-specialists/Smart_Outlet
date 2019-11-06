@@ -37,10 +37,6 @@ class CREDS:
         files = uos.listdir()
         if("creds.txt" in files):
             self.getCreds()
-        else:
-            ssid = input("Enter SSID\t")
-            password = input("Enter password\t")
-            self.createCreds(ssid, password)
 
     def createCreds(self, ssid, password):
         f = open("creds.txt", "w")
@@ -59,6 +55,8 @@ class CREDS:
 
 if __name__ == "__main__":
     print(esp.check_fw())
+    import gc
+    gc.enable()
 
     try:
         creds_handler = CREDS()
@@ -79,21 +77,14 @@ if __name__ == "__main__":
         print(e)
 
     try:
-        from microWebSrv import MicroWebSrv
-        mws = MicroWebSrv()  # TCP port 80 and files in /flash/www
+        gc.collect()
+        import websrv
+        httpd = websrv.WEBSRV()
     except Exception as e:
         print(e)
 
-    mws.Start(threaded=True) # Starts server in a new thread
-
-    @MicroWebSrv.route('/')
-    def handlerFuncGet(httpClient, httpResponse) :
-    print("In GET-TEST HTTP")
-
-    @MicroWebSrv.route('/relay', 'POST')
-    def handlerFuncGet(httpClient, httpResponse) :
-    print("In GET-TEST HTTP")
-
-    @MicroWebSrv.route('/post-test', 'POST')
-    def handlerFuncPost(httpClient, httpResponse) :
-    print("In POST-TEST HTTP")
+    while True:
+        try:
+            httpd.socketListener()
+        except Exception as e:
+            print(e)

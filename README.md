@@ -8,4 +8,10 @@ ex:
 something_SSID
 something_password
 
-Another option would be to connect by terimnal, and upon first boot up, it will prompt for a SSID, and password to save.
+## Files needed on ESP
+main.py
+smart_control.py
+websrv.py
+index.html
+creds.html
+Circuit-Specialists-logo.png
