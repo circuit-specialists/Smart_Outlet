@@ -77,15 +77,13 @@ if __name__ == "__main__":
         print(e)
 
     try:
-        gc.collect()
-        import websrv
-        httpd = websrv.WEBSRV()
+        import nanoWebSrv
+        httpd = nanoWebSrv.NANOWEBSRV()
+        while True:
+            gc.collect()
+            try:
+                httpd.socketListener()
+            except Exception as e:
+                print(e)
     except Exception as e:
         print(e)
-
-    while True:
-        try:
-            client_response = httpd.socketListener()
-            print(client_response)
-        except Exception as e:
-            print(e)
