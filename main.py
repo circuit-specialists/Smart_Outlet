@@ -55,8 +55,6 @@ class CREDS:
 
 if __name__ == "__main__":
     print(esp.check_fw())
-    import gc
-    gc.enable()
 
     try:
         creds_handler = CREDS()
@@ -80,7 +78,6 @@ if __name__ == "__main__":
         import nanoWebSrv
         httpd = nanoWebSrv.NANOWEBSRV()
         while True:
-            gc.collect()
             try:
                 httpd.socketListener()
             except Exception as e:
