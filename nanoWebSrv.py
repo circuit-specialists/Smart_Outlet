@@ -8,6 +8,7 @@ class NANOWEBSRV:
         gc.enable()
         ## enable debug print statements
         self.debug = True
+        self.debug_level = 'relaxed' # verbose and relaxed
 
         ## set port
         port = 80
@@ -18,7 +19,7 @@ class NANOWEBSRV:
         self.s.bind(addr)
         self.s.listen(5)
         self.s.settimeout(None)
-        if(self.debug):
+        if(self.debug and self.debug_level == 'relaxed'):
             print('listening on', addr)
 
     def changeHTML(self, new_html):
@@ -29,7 +30,7 @@ class NANOWEBSRV:
     def socketListener(self):
         gc.collect()
         cl, addr = self.s.accept()
-        if(self.debug):
+        if(self.debug and self.debug_level == 'relaxed'):
             print('client connected from', addr)
         cl_file = cl.makefile('rwb', 0)
         client_ask = open('client_response.txt', 'w')
@@ -40,22 +41,20 @@ class NANOWEBSRV:
                 break
         client_ask.close()
         client_dict = self.getClientAsk(client_ask)
-        response = self.getRoute(client_dict)
-        cl.sendall(response)
+        self.getRoute(cl, client_dict)
         cl.close()
-        if(self.debug):
-            #print(client_ask)
-            print()
+        if(self.debug and self.debug_level == 'verbose'):
+            print(client_ask)
 
-    def getRoute(self, client_dict):
+    def getRoute(self, client, client_dict):
         gc.collect()
         url = client_dict["Method"]
         method_type = str(url).split('/')[0][:-1].lower()
         uri = str(str(url).split('/')[1]).replace(' HTTP', '').lower()
-        print(uri)
-        ##########################################
-        ###  file must not exceed 19956 bytes  ###
-        ##########################################
+        if(self.debug and self.debug_level == 'relaxed'):
+            print(uri)
+        
+        Maximum_segment_size = 536
         try:
             if(method_type == 'get' and uri == 'favicon.ico'):
                 f = open('www/favicon.ico', 'rb')
@@ -65,12 +64,14 @@ class NANOWEBSRV:
                 f = open('www/index.html', 'rb')
             elif(method_type == 'get' and uri == 'setwifi'):
                 f = open('www/creds.html', 'rb')
-            response = f.read()
+            response = f.read(Maximum_segment_size)
+            while (len(response) > 0):
+                client.send(response)
+                response = f.read(Maximum_segment_size)
             f.close()
         except Exception as e:
             print(e)
-            response = "<!DOCTYPE html><html><body><h1>Server Error</h1><p>Server Error.</p></body></html>"
-        return response
+            client.sendall("<!DOCTYPE html><html><body><h1>Server Error</h1><p>Server Error.</p></body></html>")
 
     def getClientAsk(self, client_ask):
         f = open('client_response.txt','r', encoding='utf-16')
