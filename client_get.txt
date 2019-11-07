@@ -1,0 +1,17 @@
+Client Ask: GET /creds.html?SSID=circuitspecialists.com&password=C%21rCu%21t%21 HTTP/1.1
+Host: 192.168.1.242
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+DNT: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+Referer: http://192.168.1.242/setwifi
+Accept-Encoding: gzip, deflate
+Accept-Language: en-US,en;q=0.9,el;q=0.8
+
+
+URL: GET /creds.html?SSID=circuitspecialists.com&password=C%21rCu%21t%21 HTTP/1.1
+URI: creds.html?ssid=circuitspecialists.com&password=c%21rcu%21t%21
+JSON Dict: {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36', 'Method': 'GET /creds.html?SSID=circuitspecialists.com&password=C%21rCu%21t%21 HTTP/1.1', 'Connection': 'keep-alive', 'DNT': '1', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3', 'Host': '192.168.1.242', 'Accept-Encoding': 'gzip, deflate', 'Upgrade-Insecure-Requests': '1', 'Referer': 'http://192.168.1.242/setwifi', 'Accept-Language': 'en-US,en;q=0.9,el;q=0.8'}
+type object 'bytearray' has no attribute 'fromhex'
+JSON Dict: {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36', 'Method': 'GET /creds.html?SSID=circuitspecialists.com&password=C%21rCu%21t%21 HTTP/1.1', 'Connection': 'keep-alive', 'DNT': '1', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3', 'Host': '192.168.1.242', 'Accept-Encoding': 'gzip, deflate', 'Upgrade-Insecure-Requests': '1', 'Referer': 'http://192.168.1.242/setwifi', 'Accept-Language': 'en-US,en;q=0.9,el;q=0.8'

@@ -8,7 +8,7 @@ class NANOWEBSRV:
         gc.enable()
         ## enable debug print statements
         self.debug = True
-        self.debug_level = 'relaxed' # verbose and relaxed
+        self.debug_level = 'verbose' # verbose and relaxed
 
         ## set port
         port = 80
@@ -19,7 +19,7 @@ class NANOWEBSRV:
         self.s.bind(addr)
         self.s.listen(5)
         self.s.settimeout(None)
-        if(self.debug and self.debug_level == 'relaxed'):
+        if(self.debug and (self.debug_level == 'relaxed' or self.debug_level == 'verbose')):
             print('listening on', addr)
 
     def changeHTML(self, new_html):
@@ -30,9 +30,9 @@ class NANOWEBSRV:
     def socketListener(self):
         gc.collect()
         cl, addr = self.s.accept()
-        if(self.debug and self.debug_level == 'relaxed'):
+        if(self.debug and (self.debug_level == 'relaxed' or self.debug_level == 'verbose')):
             print('client connected from', addr)
-        cl_file = cl.makefile('rwb', 0)
+        cl_file = cl.makefile('rwb', 1)
         client_ask = open('client_response.txt', 'w')
         while True:
             line = cl_file.readline()
@@ -40,11 +40,11 @@ class NANOWEBSRV:
             if not line or line == b'\r\n':
                 break
         client_ask.close()
-        client_dict = self.getClientAsk(client_ask)
+        client_dict = self.getClientAsk()
         self.getRoute(cl, client_dict)
         cl.close()
         if(self.debug and self.debug_level == 'verbose'):
-            print(client_ask)
+            print("JSON Dict: %s" % client_dict)
 
     def getRoute(self, client, client_dict):
         gc.collect()
@@ -52,36 +52,75 @@ class NANOWEBSRV:
         method_type = str(url).split('/')[0][:-1].lower()
         uri = str(str(url).split('/')[1]).replace(' HTTP', '').lower()
         if(self.debug and self.debug_level == 'relaxed'):
-            print(uri)
+            print("URI: %s" % uri)
+        elif(self.debug and self.debug_level == 'verbose'):
+            print("URL: %s" % url)
+            print("URI: %s" % uri)
+            print("JSON Dict: %s" % client_dict)
         
         Maximum_segment_size = 536
         try:
-            if(method_type == 'get' and uri == 'favicon.ico'):
+            if(uri == 'favicon.ico'):
                 f = open('www/favicon.ico', 'rb')
-            elif(method_type == 'get' and uri == 'circuit-specialists-logo.png'):
+            elif(uri == 'circuit-specialists-logo.png'):
                 f = open('www/circuit-specialists-logo.png', 'rb')
-            elif(method_type == 'get' and uri == ''):
+            elif(uri == ''):
                 f = open('www/index.html', 'rb')
-            elif(method_type == 'get' and uri == 'setwifi'):
+            elif(uri == 'setwifi'):
                 f = open('www/setwifi.html', 'rb')
+            elif(uri[:10] == 'creds.html'):
+                uri = self.special_char_digest(uri)
+                ssid_start = uri.find('SSID=') + 5
+                ssid_end = uri.find('&', ssid_start)
+                ssid = uri[ssid_start:ssid_end]
+                password_start = uri.find('password=', ssid_end) + 9
+                password = uri[password_start:]
+                f = open('creds.txt', 'rb')
+                f.write(str(ssid) + '\n')
+                f.write(str(password))
+                f.close()
+                f = open('www/creds.html', 'rb')
+                temp = f.read()
+                temp = (temp % (ssid, password))
+                f.seek(0)
+                f.write(temp)
+                f.seek(0)
             else:
                 f = open('www/error.html', 'rb')
-            response = f.read(Maximum_segment_size)
-            while (len(response) > 0):
-                client.send(response)
+
+            if(method_type == 'get'):
                 response = f.read(Maximum_segment_size)
-            f.close()
+                if('%s' in response):
+                    response = response % ssid
+                    response = response % ssid
+                while (len(response) > 0):
+                    client.send(response)
+                    response = f.read(Maximum_segment_size)
+                f.close()
+            elif(method_type == 'post'):
+                receive = client.read(Maximum_segment_size)
+                while (len(receive) > 0):
+                    f.write(receive)
+                    receive = client.read(Maximum_segment_size)
+                f.close()
+                client.sendall("<!DOCTYPE html><html><body><h1>Received Message</h1><p>Message Received</p></body></html>")
         except Exception as e:
             print(e)
             client.sendall("<!DOCTYPE html><html><body><h1>Server Error</h1><p>Server Error.</p></body></html>")
 
-    def getClientAsk(self, client_ask):
+    def getClientAsk(self):
         f = open('client_response.txt','r', encoding='utf-16')
         temp = f.read()
         f.close()
+        if(self.debug and self.debug_level == 'verbose'):
+            print("Client Ask: %s" % temp)
         try:
             temp = temp.replace('\r\n\r\n', '').replace('\r\n', '\", \"').replace(': ', '\": \"')
             client_dict = json.loads("{ \"Method\": \"" + temp + "\" }")
             return client_dict
         except Exception as e:
             print(e)
+
+    def special_char_digest(self, string):
+        string = bytearray.fromhex('%21'.replace('%', '')).decode()
+        return string
