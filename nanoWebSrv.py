@@ -63,7 +63,9 @@ class NANOWEBSRV:
             elif(method_type == 'get' and uri == ''):
                 f = open('www/index.html', 'rb')
             elif(method_type == 'get' and uri == 'setwifi'):
-                f = open('www/creds.html', 'rb')
+                f = open('www/setwifi.html', 'rb')
+            else:
+                f = open('www/error.html', 'rb')
             response = f.read(Maximum_segment_size)
             while (len(response) > 0):
                 client.send(response)
