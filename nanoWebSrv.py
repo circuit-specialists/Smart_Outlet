@@ -2,13 +2,14 @@ import socket
 import time
 import json
 import gc
+import ubinascii
 
 class NANOWEBSRV:
     def __init__(self, html=None):
         gc.enable()
         ## enable debug print statements
         self.debug = True
-        self.debug_level = 'verbose' # verbose and relaxed
+        self.debug_level = 'relaxed' # verbose and relaxed
 
         ## set port
         port = 80
@@ -50,7 +51,8 @@ class NANOWEBSRV:
         gc.collect()
         url = client_dict["Method"]
         method_type = str(url).split('/')[0][:-1].lower()
-        uri = str(str(url).split('/')[1]).replace(' HTTP', '').lower()
+        uri_nolower = str(str(url).split('/')[1]).replace(' HTTP', '')
+        uri = uri_nolower.lower()
         if(self.debug and self.debug_level == 'relaxed'):
             print("URI: %s" % uri)
         elif(self.debug and self.debug_level == 'verbose'):
@@ -69,22 +71,23 @@ class NANOWEBSRV:
             elif(uri == 'setwifi'):
                 f = open('www/setwifi.html', 'rb')
             elif(uri[:10] == 'creds.html'):
-                uri = self.special_char_digest(uri)
-                ssid_start = uri.find('SSID=') + 5
-                ssid_end = uri.find('&', ssid_start)
-                ssid = uri[ssid_start:ssid_end]
-                password_start = uri.find('password=', ssid_end) + 9
-                password = uri[password_start:]
-                f = open('creds.txt', 'rb')
+                uri_nolower = self.special_char_digest(uri_nolower)
+                ssid_start = uri_nolower.find('SSID=') + 5
+                ssid_end = uri_nolower.find('&', ssid_start)
+                ssid = uri_nolower[ssid_start:ssid_end]
+                password_start = uri_nolower.find('password=', ssid_end) + 9
+                password = uri_nolower[password_start:]
+                f = open('creds.txt', 'wb')
                 f.write(str(ssid) + '\n')
                 f.write(str(password))
                 f.close()
                 f = open('www/creds.html', 'rb')
                 temp = f.read()
-                temp = (temp % (ssid, password))
-                f.seek(0)
-                f.write(temp)
-                f.seek(0)
+                f.close()
+                f = open('www/creds.html', 'wb')
+                f.write((temp % (ssid, password)))
+                f.close()
+                f = open('www/creds.html', 'rb')
             else:
                 f = open('www/error.html', 'rb')
 
@@ -92,7 +95,7 @@ class NANOWEBSRV:
                 response = f.read(Maximum_segment_size)
                 if('%s' in response):
                     response = response % ssid
-                    response = response % ssid
+                    response = response % password
                 while (len(response) > 0):
                     client.send(response)
                     response = f.read(Maximum_segment_size)
@@ -122,5 +125,13 @@ class NANOWEBSRV:
             print(e)
 
     def special_char_digest(self, string):
-        string = bytearray.fromhex('%21'.replace('%', '')).decode()
+        ## test if string has special char
+        special_char_start = string.find('%')
+
+        ## replace all special chars with their corresponding char
+        while(special_char_start != -1):
+            special_char = string[special_char_start:special_char_start + 3]
+            string = string.replace(special_char, ubinascii.unhexlify(special_char.replace('%', '')).decode())
+            special_char_start = string.find('%')
+
         return string
