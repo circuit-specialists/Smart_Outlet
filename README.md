@@ -1,17 +1,11 @@
 # Smart_Outlet
 
+## How to Use
+Login to ESP using the Access Point label: ESP-CircuitSpecialists. Click on Set WiFi button. Set your credentials, and click Save. Reboot when finished.
 
-## Connect WiFi
-To connect with WiFi, create a txt file named, creds.txt. Put the SSID on one line, and the password on another. Save, push to esp, and reboot.
 
-ex:
-something_SSID
-something_password
+## Files needed
+Use transfer_all.cmd to trasnfer all the files and folders neccesary for working order.
 
-## Files needed on ESP
-main.py
-smart_control.py
-websrv.py
-index.html
-creds.html
-Circuit-Specialists-logo.png
+## Features Needed
+Captive Portal, or hostname redirect
