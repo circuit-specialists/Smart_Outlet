@@ -3,6 +3,7 @@ import time
 import json
 import gc
 import ubinascii
+import uos
 
 class NANOWEBSRV:
     def __init__(self, html=None):
@@ -59,43 +60,48 @@ class NANOWEBSRV:
             print("URL: %s" % url)
             print("URI: %s" % uri)
             print("JSON Dict: %s" % client_dict)
+
+        ## Set captive portal condition
+        files = uos.listdir()
+        if("creds.txt" not in files):
+            captive_portal = True
+        else:
+            captive_portal = False
         
         Maximum_segment_size = 536
         try:
-            if(uri == 'favicon.ico'):
-                f = open('www/favicon.ico', 'rb')
-            elif(uri == 'circuit-specialists-logo.png'):
-                f = open('www/circuit-specialists-logo.png', 'rb')
-            elif(uri == ''):
-                f = open('www/index.html', 'rb')
-            elif(uri == 'setwifi'):
-                f = open('www/setwifi.html', 'rb')
-            elif(uri[:10] == 'creds.html'):
-                uri_nolower = self.special_char_digest(uri_nolower)
-                ssid_start = uri_nolower.find('SSID=') + 5
-                ssid_end = uri_nolower.find('&', ssid_start)
-                ssid = uri_nolower[ssid_start:ssid_end]
-                password_start = uri_nolower.find('password=', ssid_end) + 9
-                password = uri_nolower[password_start:]
-                f = open('creds.txt', 'wb')
-                f.write(str(ssid) + '\n')
-                f.write(str(password))
-                f.close()
-                f = open('www/creds.html', 'rb')
-                temp = f.read()
-                f.close()
-                f = open('www/creds.html', 'wb')
-                f.write((temp % (ssid, password)))
-                f.close()
-                f = open('www/creds.html', 'rb')
+            if(not captive_portal or '.' in uri):
+                ## set uri handling
+                if(uri == 'favicon.ico'):
+                    f = open('www/favicon.ico', 'rb')
+                elif(uri == 'circuit-specialists-logo.png'):
+                    f = open('www/circuit-specialists-logo.png', 'rb')
+                elif(uri == ''):
+                    f = open('www/index.html', 'rb')
+                elif(uri == 'setwifi'):
+                    f = open('www/setwifi.html', 'rb')
+                elif(uri[:10] == 'creds.html'):
+                    uri_nolower = self.special_char_digest(uri_nolower)
+                    ssid_start = uri_nolower.find('SSID=') + 5
+                    ssid_end = uri_nolower.find('&', ssid_start)
+                    ssid = uri_nolower[ssid_start:ssid_end]
+                    password_start = uri_nolower.find('password=', ssid_end) + 9
+                    password = uri_nolower[password_start:]
+                    f = open('creds.txt', 'wb')
+                    f.write(str(ssid) + '\n')
+                    f.write(str(password))
+                    f.close()
+                    f = open('www/creds.html', 'rb')
+                else:
+                    f = open('www/error.html', 'rb')
             else:
-                f = open('www/error.html', 'rb')
+                ## Captive Portal Handling
+                f = open('www/setwifi.html', 'rb')
 
             if(method_type == 'get'):
                 response = f.read(Maximum_segment_size)
                 if('%s' in response):
-                    response = response % ssid
-                    response = response % password
+                    response = response % (ssid, password)
                 while (len(response) > 0):
                     client.send(response)
                     response = f.read(Maximum_segment_size)

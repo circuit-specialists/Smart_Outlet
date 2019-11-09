@@ -37,14 +37,8 @@ class CREDS:
         files = uos.listdir()
         if("creds.txt" in files):
             self.getCreds()
-
-    def createCreds(self, ssid, password):
-        f = open("creds.txt", "w")
-        f.write(str(ssid) + "\n")
-        f.write(str(password))
-        f.close()
-        self.SSID = ssid
-        self.password = password
+        else:
+            print('No creds stored')
 
     def getCreds(self):
         f = open("creds.txt", "r")
