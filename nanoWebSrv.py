@@ -2,6 +2,7 @@ import socket
 import time
 import json
 import gc
+import smart_control
 import ubinascii
 import uos
 
@@ -69,18 +70,12 @@ class NANOWEBSRV:
             captive_portal = False
         
         Maximum_segment_size = 536
+        relayControl = smart_control.CONTROLLER()
         try:
-            if(not captive_portal or '.' in uri):
-                ## set uri handling
-                if(uri == 'favicon.ico'):
-                    f = open('www/favicon.ico', 'rb')
-                elif(uri == 'circuit-specialists-logo.png'):
-                    f = open('www/circuit-specialists-logo.png', 'rb')
-                elif(uri == ''):
-                    f = open('www/index.html', 'rb')
-                elif(uri == 'setwifi'):
-                    f = open('www/setwifi.html', 'rb')
-                elif(uri[:10] == 'creds.html'):
+            if(captive_portal and not '.' in uri):
+                f = open('www/setwifi.html', 'rb')
+            elif('.' in uri):
+                if(uri[:10] == 'creds.html'):
                     uri_nolower = self.special_char_digest(uri_nolower)
                     ssid_start = uri_nolower.find('SSID=') + 5
                     ssid_end = uri_nolower.find('&', ssid_start)
@@ -95,8 +90,23 @@ class NANOWEBSRV:
                 else:
                     f = open('www/error.html', 'rb')
             else:
-                ## Captive Portal Handling
-                f = open('www/setwifi.html', 'rb')
+                ## set uri handling
+                if(uri == 'favicon.ico'):
+                    f = open('www/favicon.ico', 'rb')
+                elif(uri == 'circuit-specialists-logo.png'):
+                    f = open('www/circuit-specialists-logo.png', 'rb')
+                elif(uri == ''):
+                    f = open('www/index.html', 'rb')
+                elif(uri == 'setwifi'):
+                    f = open('www/setwifi.html', 'rb')
+                elif(uri == 'relayon'):
+                    relayControl.turnON()
+                    f = open('www/success.html', 'rb')
+                elif(uri == 'relayoff'):
+                    relayControl.turnOFF()
+                    f = open('www/success.html', 'rb')
+                else:
+                    f = open('www/error.html', 'rb')
 
             if(method_type == 'get'):
                 response = f.read(Maximum_segment_size)
@@ -114,7 +124,8 @@ class NANOWEBSRV:
                 f.close()
                 client.sendall("<!DOCTYPE html><html><body><h1>Received Message</h1><p>Message Received</p></body></html>")
         except Exception as e:
-            print(e)
+            if(self.debug):
+                print(e)
             client.sendall("<!DOCTYPE html><html><body><h1>Server Error</h1><p>Server Error.</p></body></html>")
 
     def getClientAsk(self):
@@ -128,7 +139,8 @@ class NANOWEBSRV:
             client_dict = json.loads("{ \"Method\": \"" + temp + "\" }")
             return client_dict
         except Exception as e:
-            print(e)
+            if(self.debug):
+                print(e)
 
     def special_char_digest(self, string):
         ## test if string has special char
