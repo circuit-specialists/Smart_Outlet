@@ -61,6 +61,7 @@ if __name__ == "__main__":
     except Exception as e:
         wifi = WiFi()
         print(e)
+        print("Creating Access Point...")
 
     try:
         from machine import RTC

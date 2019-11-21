@@ -72,9 +72,7 @@ class NANOWEBSRV:
         Maximum_segment_size = 536
         relayControl = smart_control.CONTROLLER()
         try:
-            if(captive_portal and not '.' in uri):
-                f = open('www/setwifi.html', 'rb')
-            elif('.' in uri):
+            if('.' in uri):
                 if(uri[:10] == 'creds.html'):
                     uri_nolower = self.special_char_digest(uri_nolower)
                     ssid_start = uri_nolower.find('SSID=') + 5
@@ -89,6 +87,8 @@ class NANOWEBSRV:
                     f = open('www/creds.html', 'rb')
                 else:
                     f = open('www/error.html', 'rb')
+            elif(captive_portal):
+                f = open('www/setwifi.html', 'rb')
             else:
                 ## set uri handling
                 if(uri == 'favicon.ico'):
