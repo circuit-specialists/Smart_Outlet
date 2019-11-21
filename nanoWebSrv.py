@@ -1,3 +1,8 @@
+"""
+   written by Mitch Zakocs from CircuitSpecialists.com
+   licensed as GPLv3
+"""
+
 import socket
 import time
 import json

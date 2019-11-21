@@ -1,9 +1,9 @@
 """
-   written by Mitch Zakocs from Ordertech.com
+   written by Mitch Zakocs from CircuitSpecialists.com
    licensed as GPLv3
   commands:
-    A00100A10D0A opens relay
-    A00101A20D0A closes relay
+    A00101A2 closes relay (On)
+    A00100A1 opens relay (Off)
 """
 
 from machine import UART

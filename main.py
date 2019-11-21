@@ -1,3 +1,8 @@
+"""
+   written by Mitch Zakocs from CircuitSpecialists.com
+   licensed as GPLv3
+"""
+
 import network
 import esp
 
