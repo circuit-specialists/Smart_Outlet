@@ -16,7 +16,7 @@ class NANOWEBSRV:
         gc.enable()
         ## enable debug print statements
         self.debug = True
-        self.debug_level = 'relaxed' # verbose and relaxed
+        self.debug_level = 'verbose' # verbose and relaxed
 
         ## set port
         port = 80
@@ -27,7 +27,7 @@ class NANOWEBSRV:
         self.s.bind(addr)
         self.s.listen(5)
         self.s.settimeout(None)
-        if(self.debug and (self.debug_level == 'relaxed' or self.debug_level == 'verbose')):
+        if(self.debug):
             print('listening on', addr)
 
     def changeHTML(self, new_html):
@@ -38,7 +38,7 @@ class NANOWEBSRV:
     def socketListener(self):
         gc.collect()
         cl, addr = self.s.accept()
-        if(self.debug and (self.debug_level == 'relaxed' or self.debug_level == 'verbose')):
+        if(self.debug):
             print('client connected from', addr)
         cl_file = cl.makefile('rwb', 1)
         client_ask = open('client_response.txt', 'w')
@@ -67,6 +67,7 @@ class NANOWEBSRV:
             print("URI: %s" % uri)
             print("JSON Dict: %s" % client_dict)
 
+
         ## Set captive portal condition
         files = uos.listdir()
         if("creds.txt" not in files):
@@ -79,28 +80,59 @@ class NANOWEBSRV:
         try:
             if('.' in uri):
                 if(uri[:10] == 'creds.html'):
+                    #Gets rid of the % signs in the URI
                     uri_nolower = self.special_char_digest(uri_nolower)
-                    ssid_start = uri_nolower.find('SSID=') + 5
-                    ssid_end = uri_nolower.find('&', ssid_start)
-                    ssid = uri_nolower[ssid_start:ssid_end]
-                    password_start = uri_nolower.find('password=', ssid_end) + 9
-                    password = uri_nolower[password_start:]
+                    #Gets the SSID and Password from the URI
+                    ssid = self.uriParse('SSID=')
+                    password = self.uriParse('password=', 0)
+                    #Writes the SSID and Password to the credentials text file
                     f = open('creds.txt', 'wb')
                     f.write(str(ssid) + '\n')
                     f.write(str(password))
                     f.close()
+                    #Opens the creds success webpage
                     f = open('www/creds.html', 'rb')
+                elif (uri[:16] == 'scheduleset.html'):
+                    #Gets rid of the % signs in the URI
+                    uri_nolower = self.special_char_digest(uri_nolower, mode = 'time')
+                    #Gets all of the needed time values from the URI
+                    mondayON = self.uriParse('Mo_ON=')
+                    mondayOFF = self.uriParse('Mo_OFF=')
+                    tuesdayON = self.uriParse('Tu_ON=')
+                    tuesdayOFF = self.uriParse('Tu_OFF=')
+                    wednesdayON = self.uriParse('We_ON=')
+                    wednesdayOFF = self.uriParse('We_OFF=')
+                    thursdayON = self.uriParse('Th_ON=')
+                    thursdayOFF = self.uriParse('Th_OFF=')
+                    fridayON = self.uriParse('Fr_ON=')
+                    fridayOFF = self.uriParse('Fr_OFF=')
+                    saturdayON = self.uriParse('Sa_ON=')
+                    saturdayOFF = self.uriParse('Sa_OFF=')
+                    sundayON = self.uriParse('Su_ON=')
+                    sundayOFF = self.uriParse('Su_OFF=')
+                    #Writes the needed time values to the schedule text file
+                    f = open('schedule.txt', 'wb')
+                    f.write(str(mondayON) + '\n' + str(mondayOFF) + '\n')
+                    f.write(str(tuesdayON) + '\n' + str(tuesdayOFF) + '\n')
+                    f.write(str(wednesdayON) + '\n' + str(wednesdayOFF) + '\n')
+                    f.write(str(thursdayON) + '\n' + str(thursdayOFF) + '\n')
+                    f.write(str(fridayON) + '\n' + str(fridayOFF) + '\n')
+                    f.write(str(saturdayON) + '\n' + str(saturdayOFF) + '\n')
+                    f.write(str(sundayON) + '\n' + str(sundayOFF) + '\n')
+                    f.close()
+                    #Opens the scheduleset webpage
+                    f = open ('www/scheduleset.html', 'rb')
+                elif(uri == 'favicon.ico'):
+                    f = open('www/favicon.ico', 'rb')
+                elif(uri == 'circuit-specialists-logo.png'):
+                    f = open('www/circuit-specialists-logo.png', 'rb')
                 else:
                     f = open('www/error.html', 'rb')
             elif(captive_portal):
                 f = open('www/setwifi.html', 'rb')
             else:
                 ## set uri handling
-                if(uri == 'favicon.ico'):
-                    f = open('www/favicon.ico', 'rb')
-                elif(uri == 'circuit-specialists-logo.png'):
-                    f = open('www/circuit-specialists-logo.png', 'rb')
-                elif(uri == ''):
+                if(uri == ''):
                     f = open('www/index.html', 'rb')
                 elif(uri == 'setwifi'):
                     f = open('www/setwifi.html', 'rb')
@@ -150,11 +182,20 @@ class NANOWEBSRV:
     def special_char_digest(self, string):
         ## test if string has special char
         special_char_start = string.find('%')
-
         ## replace all special chars with their corresponding char
         while(special_char_start != -1):
             special_char = string[special_char_start:special_char_start + 3]
             string = string.replace(special_char, ubinascii.unhexlify(special_char.replace('%', '')).decode())
             special_char_start = string.find('%')
-
         return string
+
+    def uriParse(self, stringstart, endvalue='&'):
+        try:
+            start = uri_nolower.find(stringstart) + len(stringstart)
+            if (endvalue == '&'): #If the end parameter is left blank, it will record everything until the next &
+                end = uri_nolower.find('&', start)
+                return uri_nolower[start:end]
+            else: #If the end parameter = 0, simply record everything after the start
+                return uri_nolower[start:]    
+        except Exception as e:
+            print(e)

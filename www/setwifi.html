@@ -151,14 +151,15 @@
 </head>
 
 <body>
-  <h2>Circuit Specialists Smart Outlet</h2>
-  <button onclick="document.getElementById('id01').style.display='block'" style="width:auto;">Login</button>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <h2>Reset WiFi Credentials</h2>
+  <button onclick="document.getElementById('id02').style.display='block'" style="width:auto;">Login</button>
 
-  <div id="id01" class="modal">
+  <div id="id02" class="modal">
 
     <form class="modal-content animate" action="/creds.html" method="get">
       <div class="imgcontainer">
-        <span onclick="document.getElementById('id01').style.display='none'" class="close"
+        <span onclick="document.getElementById('id02').style.display='none'" class="close"
           title="Close Modal">&times;</span>
         <img src="circuit-specialists-logo.png" style="max-width: 150px;" alt="Avatar" class="avatar">
       </div>
@@ -173,14 +174,14 @@
       </div>
 
       <div class="container" style="background-color:#f1f1f1">
-        <button type="button" onclick="document.getElementById('id01').style.display='none'"
+        <button type="button" onclick="document.getElementById('id02').style.display='none'"
           class="cancelbtn">Cancel</button>
       </div>
     </form>
   </div>
 
   <script>
-    var modal = document.getElementById('id01');
+    var modal = document.getElementById('id02');
 
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function (event) {
