@@ -7,21 +7,18 @@
 """
 
 from machine import UART
+from machine import Pin
 import ubinascii
-
 
 class CONTROLLER:
     def __init__(self):
-        #print("Booting Controller")
         self.uart = UART(0, 9600)
         self.uart.init(9600, bits=8, parity=None, stop=1)
-
+        led = machine.Pin(2, machine.Pin.OUT)
     def turnON(self):
         self.uart.write(ubinascii.unhexlify('A00101A2'))
-
-
+        led.on()
     def turnOFF(self):
         self.uart.write(ubinascii.unhexlify('A00100A1'))
-        #\x0D\x0A
-
+        led.off()
 
