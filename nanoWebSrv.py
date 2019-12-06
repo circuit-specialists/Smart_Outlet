@@ -12,11 +12,12 @@ import ubinascii
 import uos
 
 class NANOWEBSRV:
+    uri_nolower = 'temp'
     def __init__(self, html=None):
         gc.enable()
         ## enable debug print statements
         self.debug = True
-        self.debug_level = 'verbose' # verbose and relaxed
+        self.debug_level = 'relaxed' # verbose and relaxed
 
         ## set port
         port = 80
@@ -76,7 +77,7 @@ class NANOWEBSRV:
             captive_portal = False
         
         Maximum_segment_size = 536
-        relayControl = smart_control.CONTROLLER()
+        #relayControl = smart_control.CONTROLLER()
         try:
             if('.' in uri):
                 if(uri[:10] == 'creds.html'):
@@ -94,7 +95,7 @@ class NANOWEBSRV:
                     f = open('www/creds.html', 'rb')
                 elif (uri[:16] == 'scheduleset.html'):
                     #Gets rid of the % signs in the URI
-                    uri_nolower = self.special_char_digest(uri_nolower, mode = 'time')
+                    uri_nolower = self.special_char_digest(uri_nolower)
                     #Gets all of the needed time values from the URI
                     mondayON = self.uriParse('Mo_ON=')
                     mondayOFF = self.uriParse('Mo_OFF=')
@@ -191,11 +192,11 @@ class NANOWEBSRV:
 
     def uriParse(self, stringstart, endvalue='&'):
         try:
-            start = uri_nolower.find(stringstart) + len(stringstart)
+            start = self.uri_nolower.find(stringstart) + len(stringstart)
             if (endvalue == '&'): #If the end parameter is left blank, it will record everything until the next &
-                end = uri_nolower.find('&', start)
-                return uri_nolower[start:end]
+                end = self.uri_nolower.find('&', start)
+                return self.uri_nolower[start:end]
             else: #If the end parameter = 0, simply record everything after the start
-                return uri_nolower[start:]    
+                return self.uri_nolower[start:]    
         except Exception as e:
             print(e)

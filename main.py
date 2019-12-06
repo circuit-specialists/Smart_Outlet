@@ -76,7 +76,7 @@ if __name__ == "__main__":
 
     try:
         import smart_control
-        controller = smart_control.CONTROLLER()
+        #controller = smart_control.CONTROLLER()
     except Exception as e:
         print(e)
 
