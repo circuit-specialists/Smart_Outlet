@@ -12,7 +12,6 @@ import ubinascii
 import uos
 
 class NANOWEBSRV:
-    uri_nolower = 'temp'
     def __init__(self, html=None):
         gc.enable()
         ## enable debug print statements
@@ -84,8 +83,8 @@ class NANOWEBSRV:
                     #Gets rid of the % signs in the URI
                     uri_nolower = self.special_char_digest(uri_nolower)
                     #Gets the SSID and Password from the URI
-                    ssid = self.uriParse('SSID=')
-                    password = self.uriParse('password=', 0)
+                    ssid = self.uriParse('SSID=', uri_nolower)
+                    password = self.uriParse('password=', uri_nolower)
                     #Writes the SSID and Password to the credentials text file
                     f = open('creds.txt', 'wb')
                     f.write(str(ssid) + '\n')
@@ -97,20 +96,20 @@ class NANOWEBSRV:
                     #Gets rid of the % signs in the URI
                     uri_nolower = self.special_char_digest(uri_nolower)
                     #Gets all of the needed time values from the URI
-                    mondayON = self.uriParse('Mo_ON=')
-                    mondayOFF = self.uriParse('Mo_OFF=')
-                    tuesdayON = self.uriParse('Tu_ON=')
-                    tuesdayOFF = self.uriParse('Tu_OFF=')
-                    wednesdayON = self.uriParse('We_ON=')
-                    wednesdayOFF = self.uriParse('We_OFF=')
-                    thursdayON = self.uriParse('Th_ON=')
-                    thursdayOFF = self.uriParse('Th_OFF=')
-                    fridayON = self.uriParse('Fr_ON=')
-                    fridayOFF = self.uriParse('Fr_OFF=')
-                    saturdayON = self.uriParse('Sa_ON=')
-                    saturdayOFF = self.uriParse('Sa_OFF=')
-                    sundayON = self.uriParse('Su_ON=')
-                    sundayOFF = self.uriParse('Su_OFF=')
+                    mondayON = self.uriParse('Mo_ON=', uri_nolower)
+                    mondayOFF = self.uriParse('Mo_OFF=', uri_nolower)
+                    tuesdayON = self.uriParse('Tu_ON=', uri_nolower)
+                    tuesdayOFF = self.uriParse('Tu_OFF=', uri_nolower)
+                    wednesdayON = self.uriParse('We_ON=', uri_nolower)
+                    wednesdayOFF = self.uriParse('We_OFF=', uri_nolower)
+                    thursdayON = self.uriParse('Th_ON=', uri_nolower)
+                    thursdayOFF = self.uriParse('Th_OFF=', uri_nolower)
+                    fridayON = self.uriParse('Fr_ON=', uri_nolower)
+                    fridayOFF = self.uriParse('Fr_OFF=', uri_nolower)
+                    saturdayON = self.uriParse('Sa_ON=', uri_nolower)
+                    saturdayOFF = self.uriParse('Sa_OFF=', uri_nolower)
+                    sundayON = self.uriParse('Su_ON=', uri_nolower)
+                    sundayOFF = self.uriParse('Su_OFF=', uri_nolower)
                     #Writes the needed time values to the schedule text file
                     f = open('schedule.txt', 'wb')
                     f.write(str(mondayON) + '\n' + str(mondayOFF) + '\n')
@@ -138,10 +137,10 @@ class NANOWEBSRV:
                 elif(uri == 'setwifi'):
                     f = open('www/setwifi.html', 'rb')
                 elif(uri == 'relayon'):
-                    relayControl.turnON()
+                    #relayControl.turnON()
                     f = open('www/success.html', 'rb')
                 elif(uri == 'relayoff'):
-                    relayControl.turnOFF()
+                    #relayControl.turnOFF()
                     f = open('www/success.html', 'rb')
                 else:
                     f = open('www/error.html', 'rb')
@@ -190,13 +189,10 @@ class NANOWEBSRV:
             special_char_start = string.find('%')
         return string
 
-    def uriParse(self, stringstart, endvalue='&'):
+    def uriParse(self, stringstart, uri):
         try:
-            start = self.uri_nolower.find(stringstart) + len(stringstart)
-            if (endvalue == '&'): #If the end parameter is left blank, it will record everything until the next &
-                end = self.uri_nolower.find('&', start)
-                return self.uri_nolower[start:end]
-            else: #If the end parameter = 0, simply record everything after the start
-                return self.uri_nolower[start:]    
+            start = uri.find(stringstart) + len(stringstart)
+            end = uri.find('&', start)
+            return uri[start:end]  
         except Exception as e:
             print(e)
