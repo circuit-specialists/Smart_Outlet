@@ -18,8 +18,11 @@
         }
         /* Cancel Button Style */
         .cancelbtn {
-            width: auto;
-            padding: 10px 18px;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
             background-color: #f44336;
         }
 
@@ -108,6 +111,54 @@
             padding: 10px;
         }
 
+        .Mondayc {
+            width:20%;
+            margin:2%;
+            text-align:center;
+            display:inline-block;
+        }
+        .Tuesdayc {
+            width:20%;
+            margin:2%;
+            text-align:center;
+            display:inline-block;
+        }
+        .Wednesdayc {
+            width:20%;
+            margin:2%;
+            text-align:center;
+            display:inline-block;
+        }
+        .Thursdayc {
+            width:20%;
+            margin:2%;
+            text-align:center;
+            display:inline-block;
+        }
+        .Fridayc {
+            width:27%;
+            margin:2%;
+            text-align:center;
+            display:inline-block;
+        }
+        .Saturdayc {
+            width:27%;
+            margin:2%;
+            text-align:center;
+            display:inline-block;
+        }
+        .Sundayc {
+            width:27%;
+            margin:2%;
+            text-align:center;
+            display:inline-block;
+        }
+        .clearfix{
+            content: "";
+            clear: both;
+            display: table;
+        }
+
         @-webkit-keyframes animatezoom {
         from {
             -webkit-transform: scale(0)
@@ -158,47 +209,99 @@
 
             <form class="modal-content animate" action="/scheduleset.html" method="get">
               <div class="imgcontainer">
-                <span onclick="document.getElementById('id01').style.display='none'" class="close"
-                  title="Close Modal">&times;</span>
                 <img src="circuit-specialists-logo.png" style="max-width: 150px;" alt="Avatar" class="avatar">
               </div>
         
         
               <div class="container">
-                <center>
+
+                <div class ="Mondayc">  
                 <label for="Monday"><b>Monday</b></label><br>
-                On: <input type="time" placeholder="On Time" name="Mo_ON">
-                Off: <input type="time" placeholder="Off Time" name="Mo_OFF"><br>
+                Schedule: <select id="Mo_V">
+                    <option value="0"></option>
+                    <option value="1">Always On</option>
+                    <option value="2">Always Off</option>
+                    <option value="3">Custom Time</option>
+                </select><br>
+                On: <input type="time" placeholder="On Time" name="Mo_ON" id="Mo_ON" disabled="true"><br>
+                Off: <input type="time" placeholder="Off Time" name="Mo_OFF" id="Mo_OFF" disabled="true">
+                </div>
 
+                <div class ="Tuesdayc">  
                 <label for="Tuesday"><b>Tuesday</b></label><br>
-                On: <input type="time" placeholder="On Time" name="Tu_ON">
-                Off: <input type="time" placeholder="Off Time" name="Tu_OFF"><br>
+                Schedule: <select id="Tu_V">
+                        <option value="0"></option>
+                        <option value="1">Always On</option>
+                        <option value="2">Always Off</option>
+                        <option value="3">Custom Time</option>
+                </select><br>
+                On: <input type="time" placeholder="On Time" name="Tu_ON" id="Tu_ON" disabled="true"><br>
+                Off: <input type="time" placeholder="Off Time" name="Tu_OFF" id="Tu_ON" disabled="true">
+                </div>
 
+                <div class ="Wednesdayc">  
                 <label for="Wednesday"><b>Wednesday</b></label><br>
-                On: <input type="time" placeholder="On Time" name="We_ON">
-                Off: <input type="time" placeholder="Off Time" name="We_OFF"><br>
+                Schedule: <select id="We_V">
+                        <option value="0"></option>
+                        <option value="1">Always On</option>
+                        <option value="2">Always Off</option>
+                        <option value="3">Custom Time</option>
+                </select><br>
+                On: <input type="time" placeholder="On Time" name="We_ON" id="We_ON" disabled="true"><br>
+                Off: <input type="time" placeholder="Off Time" name="We_OFF" id="We_ON" disabled="true">
+                </div>
 
+                <div class ="Thursdayc">  
                 <label for="Thursday"><b>Thursday</b></label><br>
-                On: <input type="time" placeholder="On Time" name="Th_ON">
-                Off: <input type="time" placeholder="Off Time" name="Th_OFF"><br>
+                Schedule: <select id="Th_V">
+                        <option value="0"></option>
+                        <option value="1">Always On</option>
+                        <option value="2">Always Off</option>
+                        <option value="3">Custom Time</option>
+                </select><br>
+                On: <input type="time" placeholder="On Time" name="Th_ON" id="Th_ON" disabled="true"><br>
+                Off: <input type="time" placeholder="Off Time" name="Th_OFF" id="Th_ON" disabled="true">
+                </div>
 
+                <div class ="Fridayc">  
                 <label for="Friday"><b>Friday</b></label><br>
-                On: <input type="time" placeholder="On Time" name="Fr_ON">
-                Off: <input type="time" placeholder="Off Time" name="Fr_OFF"><br>
+                Schedule: <select id="Fr_V">
+                        <option value="0"></option>
+                        <option value="1">Always On</option>
+                        <option value="2">Always Off</option>
+                        <option value="3">Custom Time</option>
+                </select><br>
+                On: <input type="time" placeholder="On Time" name="Fr_ON" id="Fr_ON" disabled="true"><br>
+                Off: <input type="time" placeholder="Off Time" name="Fr_OFF" id="Fr_ON" disabled="true">
+                </div>
 
-                <label for="Tuesday"><b>Saturday</b></label><br>
-                On: <input type="time" placeholder="On Time" name="Sa_ON">
-                Off: <input type="time" placeholder="Off Time" name="Sa_OFF"><br>
+                <div class ="Saturdayc">  
+                <label for="Saturday"><b>Saturday</b></label><br>
+                Schedule: <select id="Sa_V">
+                        <option value="0"></option>
+                        <option value="1">Always On</option>
+                        <option value="2">Always Off</option>
+                        <option value="3">Custom Time</option>
+                </select><br>
+                On: <input type="time" placeholder="On Time" name="Sa_ON" id="Sa_ON" disabled="true"><br>
+                Off: <input type="time" placeholder="Off Time" name="Sa_OFF" id="Sa_ON" disabled="true">
+                </div>
 
-                <label for="Tuesday"><b>Sunday</b></label><br>
-                On: <input type="time" placeholder="On Time" name="Su_ON">
-                Off: <input type="time" placeholder="Off Time" name="Su_OFF"><br><br>
-                </center>
+                <div class ="Sundayc">
+                <label for="Sunday"><b>Sunday</b></label><br>
+                Schedule: <select id="Su_V">
+                        <option value="0"></option>
+                        <option value="1">Always On</option>
+                        <option value="2">Always Off</option>
+                        <option value="3">Custom Time</option>
+                </select><br>
+                On: <input type="time" placeholder="On Time" name="Su_ON" id="Su_ON" disabled="true"><br>
+                Off: <input type="time" placeholder="Off Time" name="Su_OFF" id="Su_ON" disabled="true">
+                </div>
+
+                <div class="clearfix"></div>
 
                 <button type="submit">Save Schedule</button>
-              </div>
-        
-              <div class="container" style="background-color:#f1f1f1">
                 <button type="button" onclick="document.getElementById('id01').style.display='none'"
                   class="cancelbtn">Cancel</button>
               </div>
@@ -214,6 +317,36 @@
             modal.style.display = "none";
             }
         }
+        //Makes the time selectors go inactive if the custom schedule option isn't selected
+        document.getElementById('Mo_V').addEventListener('change', function() {
+                document.getElementById('Mo_ON').disabled = !(this.value == 3);
+                document.getElementById('Mo_OFF').disabled = !(this.value == 3);
+        });
+        document.getElementById('Tu_V').addEventListener('change', function() {
+                document.getElementById('Tu_ON').disabled = !(this.value == 3);
+                document.getElementById('Tu_OFF').disabled = !(this.value == 3);
+        });
+        document.getElementById('We_V').addEventListener('change', function() {
+                document.getElementById('We_ON').disabled = !(this.value == 3);
+                document.getElementById('We_OFF').disabled = !(this.value == 3);
+        });
+        document.getElementById('Th_V').addEventListener('change', function() {
+                document.getElementById('Th_ON').disabled = !(this.value == 3);
+                document.getElementById('Th_OFF').disabled = !(this.value == 3);
+        });
+        document.getElementById('Fr_V').addEventListener('change', function() {
+                document.getElementById('Fr_ON').disabled = !(this.value == 3);
+                document.getElementById('Fr_OFF').disabled = !(this.value == 3);
+        });
+        document.getElementById('Sa_V').addEventListener('change', function() {
+                document.getElementById('Sa_ON').disabled = !(this.value == 3);
+                document.getElementById('Sa_OFF').disabled = !(this.value == 3);
+        });
+        document.getElementById('Su_V').addEventListener('change', function() {
+                document.getElementById('Su_ON').disabled = !(this.value == 3);
+                document.getElementById('Su_OFF').disabled = !(this.value == 3);
+        });
+        
     </script>
 </body>
 

@@ -76,7 +76,7 @@ class NANOWEBSRV:
             captive_portal = False
         
         Maximum_segment_size = 536
-        #relayControl = smart_control.CONTROLLER()
+        relayControl = smart_control.CONTROLLER()
         try:
             if('.' in uri):
                 if(uri[:10] == 'creds.html'):
@@ -137,10 +137,10 @@ class NANOWEBSRV:
                 elif(uri == 'setwifi'):
                     f = open('www/setwifi.html', 'rb')
                 elif(uri == 'relayon'):
-                    #relayControl.turnON()
+                    relayControl.turnON()
                     f = open('www/success.html', 'rb')
                 elif(uri == 'relayoff'):
-                    #relayControl.turnOFF()
+                    relayControl.turnOFF()
                     f = open('www/success.html', 'rb')
                 else:
                     f = open('www/error.html', 'rb')
