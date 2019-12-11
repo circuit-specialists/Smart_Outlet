@@ -110,6 +110,12 @@
             border: 3px solid green;
             padding: 10px;
         }
+        
+        .infotext {
+            text-align: center;
+            margin: 24px 0 12px 0;
+            position: relative;
+        }
 
         .Mondayc {
             width:20%;
@@ -212,7 +218,6 @@
                 <img src="circuit-specialists-logo.png" style="max-width: 150px;" alt="Avatar" class="avatar">
               </div>
         
-        
               <div class="container">
 
                 <div class ="Mondayc">  
@@ -236,7 +241,7 @@
                         <option value="3">Custom Time</option>
                 </select><br>
                 On: <input type="time" placeholder="On Time" name="Tu_ON" id="Tu_ON" disabled="true"><br>
-                Off: <input type="time" placeholder="Off Time" name="Tu_OFF" id="Tu_ON" disabled="true">
+                Off: <input type="time" placeholder="Off Time" name="Tu_OFF" id="Tu_OFF" disabled="true">
                 </div>
 
                 <div class ="Wednesdayc">  
@@ -248,7 +253,7 @@
                         <option value="3">Custom Time</option>
                 </select><br>
                 On: <input type="time" placeholder="On Time" name="We_ON" id="We_ON" disabled="true"><br>
-                Off: <input type="time" placeholder="Off Time" name="We_OFF" id="We_ON" disabled="true">
+                Off: <input type="time" placeholder="Off Time" name="We_OFF" id="We_OFF" disabled="true">
                 </div>
 
                 <div class ="Thursdayc">  
@@ -260,7 +265,7 @@
                         <option value="3">Custom Time</option>
                 </select><br>
                 On: <input type="time" placeholder="On Time" name="Th_ON" id="Th_ON" disabled="true"><br>
-                Off: <input type="time" placeholder="Off Time" name="Th_OFF" id="Th_ON" disabled="true">
+                Off: <input type="time" placeholder="Off Time" name="Th_OFF" id="Th_OFF" disabled="true">
                 </div>
 
                 <div class ="Fridayc">  
@@ -272,7 +277,7 @@
                         <option value="3">Custom Time</option>
                 </select><br>
                 On: <input type="time" placeholder="On Time" name="Fr_ON" id="Fr_ON" disabled="true"><br>
-                Off: <input type="time" placeholder="Off Time" name="Fr_OFF" id="Fr_ON" disabled="true">
+                Off: <input type="time" placeholder="Off Time" name="Fr_OFF" id="Fr_OFF" disabled="true">
                 </div>
 
                 <div class ="Saturdayc">  
@@ -284,7 +289,7 @@
                         <option value="3">Custom Time</option>
                 </select><br>
                 On: <input type="time" placeholder="On Time" name="Sa_ON" id="Sa_ON" disabled="true"><br>
-                Off: <input type="time" placeholder="Off Time" name="Sa_OFF" id="Sa_ON" disabled="true">
+                Off: <input type="time" placeholder="Off Time" name="Sa_OFF" id="Sa_OFF" disabled="true">
                 </div>
 
                 <div class ="Sundayc">
@@ -296,11 +301,13 @@
                         <option value="3">Custom Time</option>
                 </select><br>
                 On: <input type="time" placeholder="On Time" name="Su_ON" id="Su_ON" disabled="true"><br>
-                Off: <input type="time" placeholder="Off Time" name="Su_OFF" id="Su_ON" disabled="true">
+                Off: <input type="time" placeholder="Off Time" name="Su_OFF" id="Su_OFF" disabled="true">
                 </div>
 
                 <div class="clearfix"></div>
-
+                <div class = "infotext">
+                    <h3>Set the schedule option to blank to keep current settings.</h3>
+                </div>
                 <button type="submit">Save Schedule</button>
                 <button type="button" onclick="document.getElementById('id01').style.display='none'"
                   class="cancelbtn">Cancel</button>

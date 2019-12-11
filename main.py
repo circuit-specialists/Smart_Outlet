@@ -10,6 +10,9 @@ import time
 import machine
 import esp
 import gc
+import schedule
+import smart_control
+import nanoWebSrv
 from sys import platform
 gc.collect()
 
@@ -79,81 +82,61 @@ class WDT: #Software WatchDog system to reset the board if it shuts off unexpect
         self._timer.deinit()
 
 class TIME:
-    isupdated = False
-    def logToFile(status, time):
-        with open('log.txt','w') as file:
+    def logToFile(self, status, time):
+        with open('timelog.txt','w') as file:
             file.write(status)
             file.write(str(time))
         file.close()
     def updateTime(self):
-        if utime.localtime()[4]%15==0 and not is_updated: #Checks if its been 15 minutes
+        if utime.localtime()[4]%15==0: #Checks if its been 15 minutes
             try:
                 ntptime.settime()
             except Exception as e:
                 print(e)
-            isupdated = True
             time.sleep(0.5)
-        elif utime.localtime()[3]%15 != 0 and is_updated: #If it hasn't been 15 mins, set to not updated
-            isupdated = False
-    def checkTime(self):
-        if t[3]>=23 or t[3]<7 and led.value() == OFF:
-            write_to_file("ON", utime.localtime())
-            led.off()
-            print("ON")
-            utime.localtime()
-        elif t[3]>=7 and t[3]<23 and led.value() == ON:
-            led.on()
-            print("OFF")
-            utime.localtime()
-            write_to_file("OFF", utime.localtime())
 
-
-class CREDS:
+class INPUT:
     def __init__(self):
         import uos
         files = uos.listdir()
         if("creds.txt" in files):
             self.getCreds()
-        else:
-            if(norepl):
-                pass
-            else:
-                print('No creds stored')
 
     def getCreds(self):
         f = open("creds.txt", "r")
         self.SSID = str(f.readline()).strip()
         self.password = str(f.readline()).strip()
         f.close()
+    def getTimes(self):
+        f = open ("schedule.txt")
+
+
 
 
 if __name__ == "__main__":
+    #Wifi Setup
     try:
-        creds_handler = CREDS()
-        wifi = WiFi(ssid=creds_handler.SSID, password=creds_handler.password, type='client')
+        text_handler = INPUT()
+        wifi = WiFi(ssid=text_handler.SSID, password=text_handler.password, type='client')
     except Exception as e:
         wifi = WiFi()
         print(e)
         print("Creating Access Point...")
-
+    #Setup webserver, time, WatchDog system and relay controller classes
     try:
         timeSchedule = TIME()
         watchDog = WDT()
-    except Exception as e:
-        print(e)
-
-    try:
-        import smart_control
-        #controller = smart_control.CONTROLLER()
-    except Exception as e:
-        print(e)
-
-    try:
-        import nanoWebSrv
+        controller = smart_control.CONTROLLER()
         httpd = nanoWebSrv.NANOWEBSRV()
+    except Exception as e:
+        print(e)
+    #Main execution loop
+    try:
         while True:
             httpd.socketListener()
-            timeSchedule.checkTime()
+            timeSchedule.updateTime()
             watchDog.feed()
+            schedule.run_pending()
+            time.sleep(1)
     except Exception as e:
         print(e)

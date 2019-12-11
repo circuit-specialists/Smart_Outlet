@@ -96,29 +96,80 @@ class NANOWEBSRV:
                     #Gets rid of the % signs in the URI
                     uri_nolower = self.special_char_digest(uri_nolower)
                     #Gets all of the needed time values from the URI
+                    mondayV = self.uriParse('Mo_V=', uri_nolower)
                     mondayON = self.uriParse('Mo_ON=', uri_nolower)
                     mondayOFF = self.uriParse('Mo_OFF=', uri_nolower)
+                    tuesdayV = self.uriParse('Tu_V=', uri_nolower)
                     tuesdayON = self.uriParse('Tu_ON=', uri_nolower)
                     tuesdayOFF = self.uriParse('Tu_OFF=', uri_nolower)
+                    wednesdayV = self.uriParse('We_V=', uri_nolower)
                     wednesdayON = self.uriParse('We_ON=', uri_nolower)
                     wednesdayOFF = self.uriParse('We_OFF=', uri_nolower)
+                    thursdayV = self.uriParse('Th_V=', uri_nolower)
                     thursdayON = self.uriParse('Th_ON=', uri_nolower)
                     thursdayOFF = self.uriParse('Th_OFF=', uri_nolower)
+                    fridayV = self.uriParse('Fr_V=', uri_nolower)
                     fridayON = self.uriParse('Fr_ON=', uri_nolower)
                     fridayOFF = self.uriParse('Fr_OFF=', uri_nolower)
+                    saturdayV = self.uriParse('Sa_V=', uri_nolower)
                     saturdayON = self.uriParse('Sa_ON=', uri_nolower)
                     saturdayOFF = self.uriParse('Sa_OFF=', uri_nolower)
+                    sundayV = self.uriParse('Su_V=', uri_nolower)
                     sundayON = self.uriParse('Su_ON=', uri_nolower)
                     sundayOFF = self.uriParse('Su_OFF=', uri_nolower)
+                    # Read in the file once and build a list of line offsets
+                    f = open('schedule.txt', 'rb')
+                    line_offset = []
+                    offset = 0
+                    for line in f:
+                        line_offset.append(offset)
+                        offset += len(line)
+                    f.seek(0)
+                    #Reads and overwrites the previous values if the schedule value is set to 0
+                    if (mondayV == 0) {
+                        mondayV = f.seek(line_offset[0])
+                        mondayON = f.seek(line_offset[1])
+                        mondayOFF = f.seek(line_offset[2])
+                    }
+                    if (tuesdayV == 0){
+                        tuesdayV = f.seek(line_offset[3])
+                        tuesdayON = f.seek(line_offset[4])
+                        tuesdayOFF = f.seek(line_offset[5])
+                    }
+                    if (wednesdayV == 0){
+                        wednesdayV = f.seek(line_offset[6])
+                        wednesdayON = f.seek(line_offset[7])
+                        wednesdayOFF = f.seek(line_offset[8])
+                    }
+                    if (thursdayV == 0){
+                        thursdayV = f.seek(line_offset[9])
+                        thursdayON = f.seek(line_offset[10])
+                        thursdayOFF = f.seek(line_offset[11])
+                    }
+                    if (fridayV == 0){
+                        fridayV = f.seek(line_offset[12])
+                        fridayON = f.seek(line_offset[13])
+                        fridayOFF = f.seek(line_offset[14])
+                    }
+                    if (saturdayV == 0){
+                        saturdayV = f.seek(line_offset[15])
+                        saturdayON = f.seek(line_offset[16])
+                        saturdayOFF = f.seek(line_offset[17])
+                    }
+                    if (sundayV == 0) { 
+                        sundayV = f.seek(line_offset[18])
+                        sundayON = f.seek(line_offset[19])
+                        sundayOFF = f.seek(line_offset[20])
+                    }
                     #Writes the needed time values to the schedule text file
                     f = open('schedule.txt', 'wb')
-                    f.write(str(mondayON) + '\n' + str(mondayOFF) + '\n')
-                    f.write(str(tuesdayON) + '\n' + str(tuesdayOFF) + '\n')
-                    f.write(str(wednesdayON) + '\n' + str(wednesdayOFF) + '\n')
-                    f.write(str(thursdayON) + '\n' + str(thursdayOFF) + '\n')
-                    f.write(str(fridayON) + '\n' + str(fridayOFF) + '\n')
-                    f.write(str(saturdayON) + '\n' + str(saturdayOFF) + '\n')
-                    f.write(str(sundayON) + '\n' + str(sundayOFF) + '\n')
+                    f.write(str(mondayV) + '\n' + str(mondayON) + '\n' + str(mondayOFF) + '\n')
+                    f.write(str(tuesdayV) + '\n' + str(tuesdayON) + '\n' + str(tuesdayOFF) + '\n')
+                    f.write(str(wednesdayV) + '\n' + str(wednesdayON) + '\n' + str(wednesdayOFF) + '\n')
+                    f.write(str(thursdayV) + '\n' + str(thursdayON) + '\n' + str(thursdayOFF) + '\n')
+                    f.write(str(fridayV) + '\n' + str(fridayON) + '\n' + str(fridayOFF) + '\n')
+                    f.write(str(saturdayV) + '\n' + str(saturdayON) + '\n' + str(saturdayOFF) + '\n')
+                    f.write(str(sundayV) + '\n' + str(sundayON) + '\n' + str(sundayOFF) + '\n')
                     f.close()
                     #Opens the scheduleset webpage
                     f = open ('www/scheduleset.html', 'rb')
