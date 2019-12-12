@@ -126,41 +126,35 @@ class NANOWEBSRV:
                         offset += len(line)
                     f.seek(0)
                     #Reads and overwrites the previous values if the schedule value is set to 0
-                    if (mondayV == 0) {
+                    if (mondayV == 0):
                         mondayV = f.seek(line_offset[0])
                         mondayON = f.seek(line_offset[1])
                         mondayOFF = f.seek(line_offset[2])
-                    }
-                    if (tuesdayV == 0){
+                    if (tuesdayV == 0):
                         tuesdayV = f.seek(line_offset[3])
                         tuesdayON = f.seek(line_offset[4])
                         tuesdayOFF = f.seek(line_offset[5])
-                    }
-                    if (wednesdayV == 0){
+                    if (wednesdayV == 0):
                         wednesdayV = f.seek(line_offset[6])
                         wednesdayON = f.seek(line_offset[7])
                         wednesdayOFF = f.seek(line_offset[8])
-                    }
-                    if (thursdayV == 0){
+                    if (thursdayV == 0):
                         thursdayV = f.seek(line_offset[9])
                         thursdayON = f.seek(line_offset[10])
                         thursdayOFF = f.seek(line_offset[11])
-                    }
-                    if (fridayV == 0){
+                    if (fridayV == 0):
                         fridayV = f.seek(line_offset[12])
                         fridayON = f.seek(line_offset[13])
                         fridayOFF = f.seek(line_offset[14])
-                    }
-                    if (saturdayV == 0){
+                    if (saturdayV == 0):
                         saturdayV = f.seek(line_offset[15])
                         saturdayON = f.seek(line_offset[16])
                         saturdayOFF = f.seek(line_offset[17])
-                    }
-                    if (sundayV == 0) { 
+                    if (sundayV == 0):
                         sundayV = f.seek(line_offset[18])
                         sundayON = f.seek(line_offset[19])
                         sundayOFF = f.seek(line_offset[20])
-                    }
+                    f.close()
                     #Writes the needed time values to the schedule text file
                     f = open('schedule.txt', 'wb')
                     f.write(str(mondayV) + '\n' + str(mondayON) + '\n' + str(mondayOFF) + '\n')

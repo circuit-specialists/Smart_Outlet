@@ -14,11 +14,11 @@ class CONTROLLER:
     def __init__(self):
         self.uart = UART(0, 9600)
         self.uart.init(9600, bits=8, parity=None, stop=1)
-        led = machine.Pin(2, machine.Pin.OUT)
+        self.led = Pin(2, Pin.OUT)
     def turnON(self):
         self.uart.write(ubinascii.unhexlify('A00101A2'))
-        led.on()
+        self.led.on()
     def turnOFF(self):
         self.uart.write(ubinascii.unhexlify('A00100A1'))
-        led.off()
+        self.led.off()
 
