@@ -246,17 +246,17 @@ class TIME:
 
                 #Sunday
                 if t[6] == 0: #Checks the weekday to see if it matches
-                if text_handler.sundayV == 3: #Checks if it's set to use custom values
-                    if t[3]>=text_handler.sundayONHour or t[3]<text_handler.sundayOFFHour: #Checks if the time is after the ON time
-                        controller.turnON()
-                        utime.localtime()
-                    elif t[3]>=text_handler.sundayOFFHour and t[3]<text_handler.sundayONHour: #Checks if the time is after the OFF time
-                        controller.turnOFF()
-                        utime.localtime()
-                elif text_handler.sundayV == 2 or text_handler.sundayV == 0: #Checks if it's set to always off or a blank value
-                    controller.turnOFF()    
-                else:
-                    controller.turnON()    
+                    if text_handler.sundayV == 3: #Checks if it's set to use custom values
+                        if t[3]>=text_handler.sundayONHour or t[3]<text_handler.sundayOFFHour: #Checks if the time is after the ON time
+                            controller.turnON()
+                            utime.localtime()
+                        elif t[3]>=text_handler.sundayOFFHour and t[3]<text_handler.sundayONHour: #Checks if the time is after the OFF time
+                            controller.turnOFF()
+                            utime.localtime()
+                    elif text_handler.sundayV == 2 or text_handler.sundayV == 0: #Checks if it's set to always off or a blank value
+                        controller.turnOFF()    
+                    else:
+                        controller.turnON()    
 
 if __name__ == "__main__":
     #Wifi Setup
@@ -267,7 +267,7 @@ if __name__ == "__main__":
         wifi = WiFi()
         print(e)
         print("Creating Access Point...")
-        
+
     #Setup webserver, time, WatchDog system and relay controller classes
     try:
         timeSchedule = TIME()
