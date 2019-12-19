@@ -27,8 +27,7 @@ class NANOWEBSRV:
         self.s.bind(addr)
         self.s.listen(5)
         self.s.settimeout(None)
-        if(self.debug):
-            print('listening on', addr)
+        self.disable = False
 
     def changeHTML(self, new_html):
         f = open(new_html, "r")
@@ -37,22 +36,23 @@ class NANOWEBSRV:
 
     def socketListener(self):
         gc.collect()
-        cl, addr = self.s.accept()
-        if(self.debug):
-            print('client connected from', addr)
-        cl_file = cl.makefile('rwb', 1)
-        client_ask = open('client_response.txt', 'w')
-        while True:
-            line = cl_file.readline()
-            client_ask.write(line)
-            if not line or line == b'\r\n':
-                break
-        client_ask.close()
-        client_dict = self.getClientAsk()
-        self.getRoute(cl, client_dict)
-        cl.close()
-        if(self.debug and self.debug_level == 'verbose'):
-            print("JSON Dict: %s" % client_dict)
+        if self.disable == False:
+            cl, addr = self.s.accept()
+            if(self.debug):
+                print('client connected from', addr)
+            cl_file = cl.makefile('rwb', 1)
+            client_ask = open('client_response.txt', 'w')
+            while True:
+                line = cl_file.readline()
+                client_ask.write(line)
+                if not line or line == b'\r\n':
+                    break
+            client_ask.close()
+            client_dict = self.getClientAsk()
+            self.getRoute(cl, client_dict)
+            cl.close()
+            if(self.debug and self.debug_level == 'verbose'):
+                print("JSON Dict: %s" % client_dict)
 
     def getRoute(self, client, client_dict):
         gc.collect()
@@ -117,46 +117,44 @@ class NANOWEBSRV:
                     sundayV = self.uriParse('Su_V=', uri_nolower)
                     sundayON = self.uriParse('Su_ON=', uri_nolower)
                     sundayOFF = self.uriParse('Su_OFF=', uri_nolower)
-                    # Read in the file once and build a list of line offsets
-                    f = open('schedule.txt', 'rb')
-                    line_offset = []
-                    offset = 0
-                    for line in f:
-                        line_offset.append(offset)
-                        offset += len(line)
-                    f.seek(0)
-                    #Reads and overwrites the previous values if the schedule value is set to 0
-                    if (mondayV == 0):
-                        mondayV = f.seek(line_offset[0])
-                        mondayON = f.seek(line_offset[1])
-                        mondayOFF = f.seek(line_offset[2])
-                    if (tuesdayV == 0):
-                        tuesdayV = f.seek(line_offset[3])
-                        tuesdayON = f.seek(line_offset[4])
-                        tuesdayOFF = f.seek(line_offset[5])
-                    if (wednesdayV == 0):
-                        wednesdayV = f.seek(line_offset[6])
-                        wednesdayON = f.seek(line_offset[7])
-                        wednesdayOFF = f.seek(line_offset[8])
-                    if (thursdayV == 0):
-                        thursdayV = f.seek(line_offset[9])
-                        thursdayON = f.seek(line_offset[10])
-                        thursdayOFF = f.seek(line_offset[11])
-                    if (fridayV == 0):
-                        fridayV = f.seek(line_offset[12])
-                        fridayON = f.seek(line_offset[13])
-                        fridayOFF = f.seek(line_offset[14])
-                    if (saturdayV == 0):
-                        saturdayV = f.seek(line_offset[15])
-                        saturdayON = f.seek(line_offset[16])
-                        saturdayOFF = f.seek(line_offset[17])
-                    if (sundayV == 0):
-                        sundayV = f.seek(line_offset[18])
-                        sundayON = f.seek(line_offset[19])
-                        sundayOFF = f.seek(line_offset[20])
-                    f.close()
+                    # If the file already exists, don't overwrite if the value is blank for the scheduling option
+                    # This is so you don't have to completely re-enter all of your times every time you set the schedule, you can just update it
+                    files = uos.listdir()
+                    if ("schedule.txt" in files):
+                        f = open('schedule.txt', 'r')
+                        line = f.readlines()
+                        #Reads and overwrites the previous values if the schedule value is set to 0
+                        if (mondayV == '0'):
+                            mondayV = str(line[0]).strip('\n')
+                            mondayON = str(line[1]).strip('\n')
+                            mondayOFF = str(line[2]).strip('\n')
+                        if (tuesdayV == '0'):
+                            tuesdayV = str(line[3]).strip('\n')
+                            tuesdayON = str(line[4]).strip('\n')
+                            tuesdayOFF = str(line[5]).strip('\n')
+                        if (wednesdayV == '0'):
+                            wednesdayV = str(line[6]).strip('\n')
+                            wednesdayON = str(line[7]).strip('\n')
+                            wednesdayOFF = str(line[8]).strip('\n')
+                        if (thursdayV == '0'):
+                            thursdayV = str(line[9]).strip('\n')
+                            thursdayON = str(line[10]).strip('\n')
+                            thursdayOFF = str(line[11]).strip('\n')
+                        if (fridayV == '0'):
+                            fridayV = str(line[12]).strip('\n')
+                            fridayON = str(line[13]).strip('\n')
+                            fridayOFF = str(line[14]).strip('\n')
+                        if (saturdayV == '0'):
+                            saturdayV = str(line[15]).strip('\n')
+                            saturdayON = str(line[16]).strip('\n')
+                            saturdayOFF = str(line[17]).strip('\n')
+                        if (sundayV == '0'):
+                            sundayV = str(line[18]).strip('\n')
+                            sundayON = str(line[19]).strip('\n')
+                            sundayOFF = str(line[20]).strip('\n')
+                        f.close()
                     #Writes the needed time values to the schedule text file
-                    f = open('schedule.txt', 'wb')
+                    f = open('schedule.txt', 'w')
                     f.write(str(mondayV) + '\n' + str(mondayON) + '\n' + str(mondayOFF) + '\n')
                     f.write(str(tuesdayV) + '\n' + str(tuesdayON) + '\n' + str(tuesdayOFF) + '\n')
                     f.write(str(wednesdayV) + '\n' + str(wednesdayON) + '\n' + str(wednesdayOFF) + '\n')
@@ -181,6 +179,9 @@ class NANOWEBSRV:
                     f = open('www/index.html', 'rb')
                 elif(uri == 'setwifi'):
                     f = open('www/setwifi.html', 'rb')
+                elif(uri == 'started'):
+                    f= open('www/started.html', 'rb')
+                    self.disable = True
                 elif(uri == 'relayon'):
                     relayControl.turnON()
                     f = open('www/success.html', 'rb')

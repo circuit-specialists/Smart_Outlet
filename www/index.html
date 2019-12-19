@@ -8,7 +8,7 @@
         }
         /* Set a style for all buttons */
         button {
-            background-color: #4CAF50;
+            background-color: #158CFB;
             color: white;
             padding: 14px 20px;
             margin: 8px 0;
@@ -203,11 +203,13 @@
 <body>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <h1>Circuit Specialists Smart Outlet</h1>
-    <h2>Scheduling: </h2>
+    <h2>Scheduling Setup: </h2>
     <button onclick="document.getElementById('id01').style.display='block'" style="width:auto;">Set Schedule</button>
-    <h2>Manual: </h2>
-    <button onclick="location.href='/relayon';" style="width:auto;" >Relay On</button>
-    <button onclick="location.href='/relayoff';" style="width:auto;" >Relay Off</button>
+    <h2>Controls: </h2>
+    <button onclick="location.href='/started';" style="width:auto;" >Start Loop</button>
+    <button onclick="location.href='/relayon';" style="width:auto;" >Manual On</button>
+    <button onclick="location.href='/relayoff';" style="width:auto;" >Manual Off</button>
+    <h6>Press "Start Loop" to begin following the schedule. The web server will turn off and it will turn the outlet on and off according to the set times.</h4>
     <h2>Settings: </h2>
     <button onclick="location.href='/setwifi';" style="width:auto;">Reset WiFi Credentials</button>
 
@@ -222,7 +224,7 @@
 
                 <div class ="Mondayc">  
                 <label for="Monday"><b>Monday</b></label><br>
-                Schedule: <select id="Mo_V">
+                Schedule: <select name="Mo_V" id="MoV">
                     <option value="0"></option>
                     <option value="1">Always On</option>
                     <option value="2">Always Off</option>
@@ -234,7 +236,7 @@
 
                 <div class ="Tuesdayc">  
                 <label for="Tuesday"><b>Tuesday</b></label><br>
-                Schedule: <select id="Tu_V">
+                Schedule: <select name="Tu_V" id="TuV">
                         <option value="0"></option>
                         <option value="1">Always On</option>
                         <option value="2">Always Off</option>
@@ -246,7 +248,7 @@
 
                 <div class ="Wednesdayc">  
                 <label for="Wednesday"><b>Wednesday</b></label><br>
-                Schedule: <select id="We_V">
+                Schedule: <select name="We_V" id="WeV">
                         <option value="0"></option>
                         <option value="1">Always On</option>
                         <option value="2">Always Off</option>
@@ -258,7 +260,7 @@
 
                 <div class ="Thursdayc">  
                 <label for="Thursday"><b>Thursday</b></label><br>
-                Schedule: <select id="Th_V">
+                Schedule: <select name="Th_V" id="ThV">
                         <option value="0"></option>
                         <option value="1">Always On</option>
                         <option value="2">Always Off</option>
@@ -270,7 +272,7 @@
 
                 <div class ="Fridayc">  
                 <label for="Friday"><b>Friday</b></label><br>
-                Schedule: <select id="Fr_V">
+                Schedule: <select name="Fr_V" id="FrV">
                         <option value="0"></option>
                         <option value="1">Always On</option>
                         <option value="2">Always Off</option>
@@ -282,7 +284,7 @@
 
                 <div class ="Saturdayc">  
                 <label for="Saturday"><b>Saturday</b></label><br>
-                Schedule: <select id="Sa_V">
+                Schedule: <select name="Sa_V" id="SaV">
                         <option value="0"></option>
                         <option value="1">Always On</option>
                         <option value="2">Always Off</option>
@@ -294,7 +296,7 @@
 
                 <div class ="Sundayc">
                 <label for="Sunday"><b>Sunday</b></label><br>
-                Schedule: <select id="Su_V">
+                Schedule: <select name="Su_V" id="SuV">
                         <option value="0"></option>
                         <option value="1">Always On</option>
                         <option value="2">Always Off</option>
@@ -307,6 +309,7 @@
                 <div class="clearfix"></div>
                 <div class = "infotext">
                     <h3>Set the schedule option to blank to keep current settings.</h3>
+                    <h4>Must convert to UTC time.</h4>
                 </div>
                 <button type="submit">Save Schedule</button>
                 <button type="button" onclick="document.getElementById('id01').style.display='none'"
@@ -324,32 +327,48 @@
             modal.style.display = "none";
             }
         }
+        modal.addEventListener('submit', function() {
+                document.getElementById('Mo_ON').disabled = false;
+                document.getElementById('Mo_OFF').disabled = false;
+                document.getElementById('Tu_ON').disabled = false;
+                document.getElementById('Tu_OFF').disabled = false;
+                document.getElementById('We_ON').disabled = false;
+                document.getElementById('We_OFF').disabled = false;
+                document.getElementById('Th_ON').disabled = false;
+                document.getElementById('Th_OFF').disabled = false;
+                document.getElementById('Fr_ON').disabled = false;
+                document.getElementById('Fr_OFF').disabled = false;
+                document.getElementById('Sa_ON').disabled = false;
+                document.getElementById('Sa_OFF').disabled = false;
+                document.getElementById('Su_ON').disabled = false;
+                document.getElementById('Su_OFF').disabled = false;
+        });
         //Makes the time selectors go inactive if the custom schedule option isn't selected
-        document.getElementById('Mo_V').addEventListener('change', function() {
+        document.getElementById('MoV').addEventListener('change', function() {
                 document.getElementById('Mo_ON').disabled = !(this.value == 3);
                 document.getElementById('Mo_OFF').disabled = !(this.value == 3);
         });
-        document.getElementById('Tu_V').addEventListener('change', function() {
+        document.getElementById('TuV').addEventListener('change', function() {
                 document.getElementById('Tu_ON').disabled = !(this.value == 3);
                 document.getElementById('Tu_OFF').disabled = !(this.value == 3);
         });
-        document.getElementById('We_V').addEventListener('change', function() {
+        document.getElementById('WeV').addEventListener('change', function() {
                 document.getElementById('We_ON').disabled = !(this.value == 3);
                 document.getElementById('We_OFF').disabled = !(this.value == 3);
         });
-        document.getElementById('Th_V').addEventListener('change', function() {
+        document.getElementById('ThV').addEventListener('change', function() {
                 document.getElementById('Th_ON').disabled = !(this.value == 3);
                 document.getElementById('Th_OFF').disabled = !(this.value == 3);
         });
-        document.getElementById('Fr_V').addEventListener('change', function() {
+        document.getElementById('FrV').addEventListener('change', function() {
                 document.getElementById('Fr_ON').disabled = !(this.value == 3);
                 document.getElementById('Fr_OFF').disabled = !(this.value == 3);
         });
-        document.getElementById('Sa_V').addEventListener('change', function() {
+        document.getElementById('SaV').addEventListener('change', function() {
                 document.getElementById('Sa_ON').disabled = !(this.value == 3);
                 document.getElementById('Sa_OFF').disabled = !(this.value == 3);
         });
-        document.getElementById('Su_V').addEventListener('change', function() {
+        document.getElementById('SuV').addEventListener('change', function() {
                 document.getElementById('Su_ON').disabled = !(this.value == 3);
                 document.getElementById('Su_OFF').disabled = !(this.value == 3);
         });
