@@ -18,6 +18,8 @@ from sys import platform
 gc.collect()
 
 class WiFi:
+        # This simply sets up the Wi-Fi. The else section in the initialization definition simply sets up
+        # an access point if there is no credentials file so you can set up the Wi-Fi ssid and password.
     def __init__(self, ssid=None, password=None, type='AP'):
         if(type != 'AP'):
             self.wlan = network.WLAN(network.STA_IF)    # create station interface
@@ -47,6 +49,8 @@ class WiFi:
         self._timer.deinit()
 
 class INPUT:
+    # This is the input class. This handles all of the reading of the text files created from the nanoWebSrv library
+    # and stores them into variables for use by the various other classes.
     def __init__(self):
         self.files = uos.listdir()
         if("creds.txt" in self.files):
@@ -87,6 +91,9 @@ class INPUT:
         f.close()
 
 class TIME:
+    # This class handles all of the time-based scheduling functionality of the smart outlet. It can update the time of the RTC,
+    # which it does every 15 minutes, and it also checks to see if it's currently the correct time to turn the relay
+    # on or off based on the scheduled times.
     def updateTime(self, firstbypass=False):
         if utime.localtime()[4]%15==0 or firstbypass == True: #Checks if its been 15 minutes
             try:
